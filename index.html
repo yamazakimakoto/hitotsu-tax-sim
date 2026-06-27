@@ -54,6 +54,9 @@
   /* result */
   .result .net{font-size:2.2rem;font-weight:800;text-align:center;margin:4px 0 0}
   .result .netlabel{text-align:center;color:var(--muted);font-size:.82rem}
+  .result .basenote{text-align:center;color:#4a5340;font-size:.76rem;line-height:1.55;margin:7px auto 2px;max-width:94%;background:#f3f6ee;border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+  .result .basenote b{color:var(--green)}
+  .result .barscap{color:var(--muted);font-size:.76rem;margin:12px 0 2px}
   .net.p{color:var(--plus)} .net.m{color:var(--minus)}
   .bars{margin:14px 0 6px}
   .bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:.86rem}
@@ -79,7 +82,7 @@
 
   <header class="top">
     <h1>消費税改革インパクト・シミュレーター <span class="badge">仮想試算</span></h1>
-    <div class="sub">暮らしの安心・消費税改革パッケージ（標準16〜17%・食料品ゼロ税率・給付付き税額控除・ベーシックサービス無償化）で、あなたの世帯の「年間の差し引き」をざっくり試算します。</div>
+    <div class="sub">暮らしの安心・消費税改革パッケージ（標準16〜17%・食料品ゼロ税率・給付付き税額控除・ベーシックサービス無償化）で、あなたの世帯で、いまの制度（消費税10%）と比べた「年間の差し引き」をざっくり試算します。</div>
   </header>
 
   <div class="card">
@@ -131,8 +134,10 @@
 
   <!-- 結果 -->
   <div class="card result">
-    <div class="netlabel">年間の差し引き（プラス＝恩恵／マイナス＝負担）</div>
+    <div class="netlabel">いまの制度と比べた、1年間の家計の増減</div>
     <div class="net" id="net">—</div>
+    <div class="basenote">基準＝<b>いまの制度</b>（消費税10%・食料品8%＋現在のサービス水準）。<br>＋は今より家計が楽に／−は今より負担が増える、という意味です。</div>
+    <div class="barscap">内訳（各項目とも「いまの制度」と比べた増減　＋＝戻り・恩恵／−＝負担）</div>
     <div class="bars" id="bars"></div>
     <div class="note" id="insurance">
       <b>全員が毎年「得」をする制度ではありません。</b> これは払った税を個人で取り戻す「還付」ではなく、必要なときに守られる<b>社会全体の「保険」</b>です。子育て・医療・介護など人生でお金が要る時期に厚く返り、余力のある時は支える側に回ります。<b>一時点の損得ではなく、生涯の支え合い</b>として見てください。
