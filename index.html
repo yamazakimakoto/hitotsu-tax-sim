@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消費税改革インパクト・シミュレーター｜暮らしの安心・消費税改革パッケージ（仮想試算）</title>
+<meta name="description" content="消費税改革パッケージ（標準16〜17%・食料品ゼロ税率・給付付き税額控除）が、あなたの世帯の家計にどう効くかを試算する仮想シミュレーター。フィクション・思考実験です。">
+<!-- OGP / Twitter Card（https://yamazakimakoto.github.io/hitotsu-tax-sim は公開時に実URLへ置換）-->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/">
+<meta property="og:title" content="消費税改革インパクト・シミュレーター（仮想試算）">
+<meta property="og:description" content="標準16〜17%＋食料品ゼロ＋給付付き税額控除。あなたの世帯の「負担」と「受益」を試算します。※ひとつの党｜AI仮想内閣の思考実験">
+<meta property="og:image" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/ogp.png">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="ひとつの党｜AI仮想内閣">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="消費税改革インパクト・シミュレーター（仮想試算）">
+<meta name="twitter:description" content="標準16〜17%＋食料品ゼロ＋給付付き税額控除。あなたの世帯の負担と受益を試算。">
+<meta name="twitter:image" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/ogp.png">
+<style>
+  :root{
+    --green:#2C5F2D; --moss:#97BC62; --cream:#F5F5F5; --ink:#21243a;
+    --plus:#1f7a4d; --minus:#b23a3a; --gold:#D4A017; --line:#dfe3da; --muted:#6a7080;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+       color:var(--ink);background:#eef1ea;line-height:1.7;-webkit-text-size-adjust:100%}
+  .wrap{max-width:760px;margin:0 auto;padding:16px}
+  header.top{background:var(--green);color:#fff;border-radius:14px;padding:18px 20px;margin-bottom:14px}
+  header.top h1{margin:0;font-size:1.18rem;letter-spacing:.02em}
+  header.top .sub{font-size:.82rem;opacity:.92;margin-top:4px}
+  .badge{display:inline-block;background:var(--gold);color:#3a2c00;font-size:.7rem;font-weight:700;
+         padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tabs button{flex:1;padding:10px;border:1px solid var(--green);background:#fff;color:var(--green);
+        border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer}
+  .tabs button.on{background:var(--green);color:#fff}
+  label{display:block;font-weight:700;font-size:.9rem;margin:12px 0 4px}
+  .hint{font-weight:400;color:var(--muted);font-size:.78rem}
+  select,input[type=number]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:#fff}
+  input[type=range]{width:100%}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:120px}
+  .seg{display:flex;gap:6px}
+  .seg button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-weight:700}
+  .seg button.on{background:var(--moss);border-color:var(--moss);color:#1c2a12}
+  .kids .kidrow{display:flex;align-items:center;gap:8px;margin:6px 0}
+  .kids select{flex:1}
+  .kids .del{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+  .addkid{background:#fff;border:1px dashed var(--green);color:var(--green);border-radius:10px;padding:8px;cursor:pointer;width:100%;font-weight:700;margin-top:6px}
+  .switch{display:flex;align-items:center;gap:8px;margin:8px 0}
+  .switch input{width:20px;height:20px}
+  /* result */
+  .result .net{font-size:2.2rem;font-weight:800;text-align:center;margin:4px 0 0}
+  .result .netlabel{text-align:center;color:var(--muted);font-size:.82rem}
+  .net.p{color:var(--plus)} .net.m{color:var(--minus)}
+  .bars{margin:14px 0 6px}
+  .bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:.86rem}
+  .bar .nm{width:130px;flex:none;color:#444}
+  .bar .track{flex:1;background:#f0f2ec;border-radius:6px;height:18px;position:relative;overflow:hidden}
+  .bar .fill{position:absolute;top:0;bottom:0;border-radius:6px}
+  .bar .val{width:64px;flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .fill.pos{background:var(--moss)} .fill.neg{background:#e3a3a3}
+  .note{background:var(--cream);border-left:4px solid var(--green);border-radius:8px;padding:10px 12px;font-size:.84rem;margin-top:10px}
+  .note b{color:var(--green)}
+  details{margin-top:10px;font-size:.86rem}
+  details summary{cursor:pointer;font-weight:700;color:var(--green)}
+  table{border-collapse:collapse;width:100%;font-size:.82rem;margin-top:6px}
+  th,td{border:1px solid var(--line);padding:5px 7px;text-align:right} th{background:#f3f6ef}
+  td:first-child,th:first-child{text-align:left}
+  .disc{font-size:.74rem;color:var(--muted);margin-top:8px}
+  a{color:var(--green)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>消費税改革インパクト・シミュレーター <span class="badge">仮想試算</span></h1>
+    <div class="sub">暮らしの安心・消費税改革パッケージ（標準16〜17%・食料品ゼロ税率・給付付き税額控除・ベーシックサービス無償化）で、あなたの世帯の「年間の差し引き」をざっくり試算します。</div>
+  </header>
+
+  <div class="card">
+    <div class="tabs">
+      <button id="tabA" class="on" onclick="setMode('easy')">かんたん</button>
+      <button id="tabB" onclick="setMode('adv')">くわしい</button>
+    </div>
+
+    <label>標準税率（食料品はゼロ税率） <span class="hint">必要額から逆算した16〜17%</span></label>
+    <div class="seg" id="rateSeg">
+      <button class="on" data-r="17" onclick="setRate(17)">17%</button>
+      <button data-r="16" onclick="setRate(16)">16%</button>
+    </div>
+
+    <label>世帯のタイプ</label>
+    <select id="htype" onchange="onTypeChange()">
+      <option value="single">単身（子どもなし）</option>
+      <option value="couple">夫婦のみ（子どもなし）</option>
+      <option value="family">夫婦＋子ども</option>
+      <option value="singleparent">ひとり親＋子ども</option>
+      <option value="senior1">高齢・単身（65歳以上）</option>
+      <option value="senior2">高齢・夫婦（ともに65歳以上）</option>
+    </select>
+
+    <label>世帯の年収（税込・万円）<span class="hint" id="incLbl">500 万円</span></label>
+    <input type="range" id="income" min="100" max="2000" step="10" value="500" oninput="onInput()">
+    <input type="number" id="incomeN" min="0" step="10" value="500" oninput="syncIncome()" style="margin-top:6px">
+
+    <!-- 大人の年齢（くわしい） -->
+    <div id="advAdults" class="hidden">
+      <label>大人の年齢区分 <span class="hint">医療の恩恵を年齢別に計算します</span></label>
+      <div id="adultsBox"></div>
+    </div>
+
+    <!-- 子ども -->
+    <div id="kidsWrap" class="hidden">
+      <label>子ども（人数・学齢）</label>
+      <div id="kids" class="kids"></div>
+      <button class="addkid" onclick="addKid()">＋ 子どもを追加</button>
+    </div>
+
+    <!-- くわしい -->
+    <div id="advBox" class="hidden">
+      <div class="switch"><input type="checkbox" id="infant" onchange="onInput()"><label style="margin:0">0〜2歳児を認可保育に預けている</label></div>
+      <div class="switch"><input type="checkbox" id="care" onchange="onInput()"><label style="margin:0">在宅で要介護2〜3の方がいる</label></div>
+      <div class="switch"><input type="checkbox" id="kenpo" onchange="onInput()"><label style="margin:0">社会保険料の軽減（参考）も含める <span class="hint">制度設計次第の参考値</span></label></div>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="card result">
+    <div class="netlabel">年間の差し引き（プラス＝恩恵／マイナス＝負担）</div>
+    <div class="net" id="net">—</div>
+    <div class="bars" id="bars"></div>
+    <div class="note" id="insurance">
+      <b>全員が毎年「得」をする制度ではありません。</b> これは払った税を個人で取り戻す「還付」ではなく、必要なときに守られる<b>社会全体の「保険」</b>です。子育て・医療・介護など人生でお金が要る時期に厚く返り、余力のある時は支える側に回ります。<b>一時点の損得ではなく、生涯の支え合い</b>として見てください。
+    </div>
+    <div class="note" id="distnote" style="border-left-color:var(--gold)"></div>
+
+    <details>
+      <summary>計算の内訳と前提を見る</summary>
+      <div id="detail"></div>
+      <p class="disc">※すべて粗い仮置きの【仮想試算】で、確定値ではありません。家賃・持ち家／賃貸・地域・受診/通学/保育の実態で変わります。消費の係数（消費性向・食料比率等）は家計調査の代表値からの内挿で、任意入力は近似です。発動は物価安定・実質賃金の持続的プラスまで凍結の条件付き。</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <details open>
+      <summary>このシミュレーターの考え方（4つの増減）</summary>
+      <p style="font-size:.86rem">家計の年間差し引き ＝ <b>−①増税（非食料＋外食・酒類）＋②食料品ゼロ税率の恩恵＋③給付付き税額控除＋④ベーシックサービス無償化</b>（＋⑤社会保険料の軽減＝参考）。<br>
+      食料品でも<b>酒類・外食は軽減税率の対象外</b>（国税庁）なので、ゼロ税率の恩恵からは外し標準税率の負担側に入れています。</p>
+    </details>
+    <p class="disc">
+      <b>免責</b>：本ツールは「ひとつの党」AI仮想内閣プロジェクト（フィクション・思考実験）の試算です。現実の政府・与党は減税の方向で議論している局面であり、本提案はそれとは異なる方向の構想です。統計（社会保障費・税収・国民医療費等）は公的一次資料に基づきますが、税率16〜17%・配分・世帯別影響額はすべて【仮想試算】です。実在の政党・政治家・団体の意思決定を示すものではありません。運営：山崎誠政策研究所。<br>
+      計算根拠の全文：計算ロジック仕様書／世帯別影響試算。エンジン：calc_household.py（再現可能）。
+    </p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================================
+   計算エンジン（calc_household.py / 計算ロジック仕様書 §9 と同値）
+   係数はこの PARAMS 一か所に集約（公開時にエンジンと突き合わせ）
+   ========================================================================= */
+const PARAMS = {
+  rate: { nonfood_now:0.10, food_now:0.08, food_new:0.00 },     // 標準新率は入力(0.17/0.16)
+  // 外食・酒類が「食料」支出に占める割合（軽減対象から外す）。高齢×0.75
+  gaishoku: [[200,0.13],[350,0.17],[500,0.20],[700,0.23],[1000,0.27],[1300,0.30]],
+  // 消費モデル（§3 既定曲線）
+  disp:  [[200,0.87],[300,0.84],[400,0.81],[500,0.79],[650,0.78],[800,0.76],[1000,0.72],[1200,0.71],[1500,0.70]],
+  prop:  [[200,0.95],[300,0.90],[400,0.85],[500,0.80],[650,0.73],[800,0.68],[1000,0.62],[1200,0.60],[1500,0.58]],
+  ffood: [[200,0.23],[300,0.22],[400,0.21],[500,0.19],[650,0.18],[800,0.16],[1000,0.15],[1200,0.14],[1500,0.13]],
+  fnonf: [[200,0.50],[300,0.52],[400,0.53],[500,0.55],[650,0.57],[800,0.59],[1000,0.62],[1200,0.63],[1500,0.64]],
+  // 給付付き税額控除
+  kyufuBase: [[200,3.5],[300,2.5],[400,1.5],[500,0.8],[600,0.3],[700,0.0]],
+  // BS単価（万円/年）
+  bsEdu: { 小:7.0, 中:8.0, 高:0.0 },   // 大学は所得別関数 bsUniv
+  medBenefit: { 子ども:0.9, 現役前半:0.9, 現役後半:1.8, 前期高齢:2.6, 後期高齢:2.3 },
+  careHome: 15.0, hoiku02:30.0, diaper:3.0,
+  kenpo: { genekiRate:0.055, koreiRate:0.060, reduce:0.20, cap:5.0 },
+};
+const INFANT_BS = PARAMS.hoiku02 + PARAMS.diaper; // 33.0
+
+function interp(x, pts){
+  if(x<=pts[0][0]) return pts[0][1];
+  if(x>=pts[pts.length-1][0]) return pts[pts.length-1][1];
+  for(let i=0;i<pts.length-1;i++){
+    const [x0,y0]=pts[i],[x1,y1]=pts[i+1];
+    if(x0<=x && x<=x1) return y0+(y1-y0)*(x-x0)/(x1-x0);
+  }
+  return pts[pts.length-1][1];
+}
+function gaishokuShare(income, elderly){ let g=interp(income,PARAMS.gaishoku); return elderly? g*0.75 : g; }
+
+function kyufuBase(income){
+  const B=PARAMS.kyufuBase;
+  if(income<=B[0][0]) return B[0][1];
+  if(income>=B[B.length-1][0]) return 0;
+  return interp(income, B);
+}
+const r1=x=>Number(x.toFixed(1));   // 小数第1位へ丸め（Python round(_,1) とほぼ同値・浮動小数表現準拠）
+function kyufu(income, nChild, single, elderly){
+  // Python kyufu_parts と同じく、各項を小数第1位に丸めてから合算
+  let base=r1(kyufuBase(income));
+  let low = income<=250 ? 0.5 : 0;
+  let per = income<=500 ? 1.5 : (income<=700 ? 0.8 : 0);
+  let child = r1(per*nChild);
+  let sp = single ? 3.0 : 0;
+  let eld = elderly ? 1.0 : 0;
+  return r1(base+low+child+sp+eld);
+}
+// 大学BS：既存修学支援の控除後の新規分（低所得は小さく＝二重計上防止）
+function bsUniv(income, nUniv){
+  if(nUniv<=0) return 0;
+  let per;
+  if(income>=600) per=27.0;
+  else if(income>=380) per=10.0+(27.0-10.0)*(income-380)/(600-380);
+  else per=3.0;
+  return per*nUniv;
+}
+function bsEduSum(children, income){
+  let s=0, nUniv=0;
+  children.forEach(c=>{ if(c==='大') nUniv++; else s+=(PARAMS.bsEdu[c]||0); });
+  return s + bsUniv(income, nUniv);
+}
+function medSum(ages){ return r1(ages.reduce((a,k)=>a+(PARAMS.medBenefit[k]||0),0)); }
+
+/* 汎用エンジン（任意入力／既定曲線） */
+function calcGeneral(o){
+  // o: {income, ages[], children[], single, elderly, infants, care, rateNew, disp?,prop?,ffood?,fnonf?}
+  const inc=o.income;
+  const disp = o.disp ?? (o.elderly? 0.90 : interp(inc,PARAMS.disp));
+  const prop = o.prop ?? (interp(inc,PARAMS.prop) + (o.elderly?0.05:0) + (o.single?0.05:0));
+  const ffood= o.ffood ?? (interp(inc,PARAMS.ffood) + (o.elderly?0.03:0));
+  const fnonf= o.fnonf ?? interp(inc,PARAMS.fnonf);
+  const D=inc*disp, C=D*prop;
+  const foodTotal=C*ffood;
+  const g=gaishokuShare(inc, o.elderly);
+  const foodZero=foodTotal*(1-g), foodStd=foodTotal*g;
+  const nonfood=C*fnonf+foodStd;
+  const nb=(nonfood/(1+PARAMS.rate.nonfood_now))*(o.rateNew-PARAMS.rate.nonfood_now);
+  const fb=(foodZero/(1+PARAMS.rate.food_now))*(PARAMS.rate.food_now-PARAMS.rate.food_new);
+  const ctNet=nb-fb;
+  const nChild=(o.children?o.children.length:0)+(o.infants||0);
+  const ky=kyufu(inc,nChild,o.single,o.elderly);
+  const bs=bsEduSum(o.children||[],inc)+medSum(o.ages)+(o.care||0)+(o.infants||0)*INFANT_BS;
+  // ⑤社会保険料軽減（参考）
+  const krate=o.elderly?PARAMS.kenpo.koreiRate:PARAMS.kenpo.genekiRate;
+  const kenpo=Math.min(inc*krate*PARAMS.kenpo.reduce, PARAMS.kenpo.cap);
+  const net=-ctNet+ky+bs;
+  return {nonfoodBurden:nb, foodBenefit:fb, ctNet, kyufu:ky, bs, net, kenpo,
+          netWithKenpo:net+kenpo};
+}
+
+/* 10 プリセット（calc_household.py と完全一致の手調整係数つき・検証用） */
+const PRESETS=[
+ {name:"① 単身・低所得",income:200,disp:.87,prop:.95,ffood:.22,fnonf:.50,ages:["現役前半"]},
+ {name:"② 単身・中所得",income:450,disp:.80,prop:.80,ffood:.19,fnonf:.56,ages:["現役前半"]},
+ {name:"③ 共働き・乳幼児",income:550,disp:.78,prop:.76,ffood:.20,fnonf:.55,ages:["現役前半","現役前半","子ども"],infants:1},
+ {name:"④ ひとり親",income:270,disp:.86,prop:.92,ffood:.22,fnonf:.50,ages:["現役前半","子ども"],children:["小"],single:true},
+ {name:"⑤ 子育て・低所得",income:400,disp:.80,prop:.85,ffood:.22,fnonf:.52,ages:["現役前半","現役前半","子ども","子ども"],children:["小","中"]},
+ {name:"⑥ 子育て・中所得",income:650,disp:.78,prop:.73,ffood:.19,fnonf:.57,ages:["現役後半","現役後半","子ども","子ども"],children:["高","中"]},
+ {name:"⑦ 高所得・大学生の子",income:1100,disp:.72,prop:.62,ffood:.15,fnonf:.62,ages:["現役後半","現役後半","現役前半"],children:["大"]},
+ {name:"⑧ 高所得・子どもなし",income:1000,disp:.72,prop:.62,ffood:.15,fnonf:.62,ages:["現役後半","現役後半"]},
+ {name:"⑨ 高齢者夫婦・自立",income:250,disp:.90,prop:.92,ffood:.25,fnonf:.48,ages:["後期高齢","後期高齢"],elderly:true},
+ {name:"⑩ 高齢者夫婦・要介護",income:250,disp:.90,prop:.92,ffood:.25,fnonf:.48,ages:["後期高齢","後期高齢"],elderly:true,care:15.0},
+];
+function calcPreset(p,rateNew){
+  return calcGeneral({income:p.income,ages:p.ages,children:p.children||[],single:!!p.single,
+    elderly:!!p.elderly,infants:p.infants||0,care:p.care||0,rateNew,
+    disp:p.disp,prop:p.prop,ffood:p.ffood,fnonf:p.fnonf});
+}
+
+/* =========================== UI =========================== */
+let MODE='easy', RATE=0.17;
+const AGE_OPTS=["現役前半","現役後半","前期高齢","後期高齢"];
+const AGE_LBL={"現役前半":"18〜44歳","現役後半":"45〜64歳","前期高齢":"65〜74歳","後期高齢":"75歳〜"};
+const KID_OPTS=[["未就学","未就学(3〜5は無償)"],["小","小学生"],["中","中学生"],["高","高校生"],["大","大学生"]];
+
+function setMode(m){MODE=m;document.getElementById('tabA').classList.toggle('on',m==='easy');
+  document.getElementById('tabB').classList.toggle('on',m==='adv');
+  document.getElementById('advBox').classList.toggle('hidden',m!=='adv');
+  document.getElementById('advAdults').classList.toggle('hidden',m!=='adv');
+  render();}
+function setRate(r){RATE=r/100;document.querySelectorAll('#rateSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.r===r));render();}
+function syncIncome(){const v=+document.getElementById('incomeN').value||0;document.getElementById('income').value=Math.min(2000,Math.max(100,v));onInput();}
+function onInput(){const v=+document.getElementById('income').value;document.getElementById('incomeN').value=v;document.getElementById('incLbl').textContent=v+' 万円';render();}
+
+function htype(){return document.getElementById('htype').value;}
+function onTypeChange(){buildAdults();buildKids();render();}
+
+function curType(){
+  const t=htype();
+  return {
+    single:{adults:1,senior:false,kids:false,single:false},
+    couple:{adults:2,senior:false,kids:false,single:false},
+    family:{adults:2,senior:false,kids:true,single:false},
+    singleparent:{adults:1,senior:false,kids:true,single:true},
+    senior1:{adults:1,senior:true,kids:false,single:false},
+    senior2:{adults:2,senior:true,kids:false,single:false},
+  }[t];
+}
+function buildAdults(){
+  const t=curType(),box=document.getElementById('adultsBox');box.innerHTML='';
+  const def = t.senior?"後期高齢":"現役前半";
+  for(let i=0;i<t.adults;i++){
+    const sel=document.createElement('select');sel.className='adultAge';
+    AGE_OPTS.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=AGE_LBL[a];if(a===def)o.selected=true;sel.appendChild(o);});
+    sel.onchange=render;const w=document.createElement('div');w.style.margin='4px 0';w.appendChild(sel);box.appendChild(w);
+  }
+}
+function buildKids(){
+  const t=curType();document.getElementById('kidsWrap').classList.toggle('hidden',!t.kids);
+  const k=document.getElementById('kids');k.innerHTML='';
+  if(t.kids) addKid();
+}
+function addKid(){
+  const k=document.getElementById('kids');
+  const row=document.createElement('div');row.className='kidrow';
+  const sel=document.createElement('select');sel.className='kidGrade';
+  KID_OPTS.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;sel.appendChild(o);});
+  sel.onchange=render;
+  const del=document.createElement('button');del.className='del';del.textContent='×';del.onclick=()=>{row.remove();render();};
+  row.appendChild(sel);row.appendChild(del);k.appendChild(row);render();
+}
+
+function gatherAdults(){
+  const t=curType();
+  if(MODE==='adv'){
+    const a=[...document.querySelectorAll('.adultAge')].map(s=>s.value);
+    return a.length?a:[t.senior?"後期高齢":"現役前半"];
+  }
+  return Array.from({length:t.adults},()=> t.senior?"後期高齢":"現役後半");
+}
+function gatherKids(){return [...document.querySelectorAll('.kidGrade')].map(s=>s.value).filter(v=>v!=='未就学');}
+function gatherInfants(){
+  // 未就学を選んだ子 ＋ くわしいの認可保育チェックで 0-2 とみなす数
+  const pre=[...document.querySelectorAll('.kidGrade')].filter(s=>s.value==='未就学').length;
+  const useHoiku = MODE==='adv' && document.getElementById('infant').checked;
+  return useHoiku ? Math.max(1,pre) : 0;   // 認可保育にチェックがある時だけ 0-2 無償化を反映
+}
+
+function render(){
+  const t=curType();
+  const income=+document.getElementById('income').value;
+  const ages=gatherAdults();
+  const children=gatherKids();
+  const infants=gatherInfants();
+  const elderly = t.senior && ages.every(a=>a==="前期高齢"||a==="後期高齢"); // 成人全員65歳以上
+  const single = t.single;
+  const care = (MODE==='adv'&&document.getElementById('care').checked)?PARAMS.careHome:0;
+  const useKenpo = MODE==='adv'&&document.getElementById('kenpo').checked;
+
+  const r=calcGeneral({income,ages,children,single,elderly,infants,care,rateNew:RATE});
+  const net = useKenpo ? r.netWithKenpo : r.net;
+
+  const netEl=document.getElementById('net');
+  netEl.textContent=(net>=0?'＋':'−')+Math.abs(net).toFixed(1)+' 万円 / 年';
+  netEl.className='net '+(net>=0?'p':'m');
+
+  // bars
+  const items=[
+    ['①増税（非食料＋外食酒類）', -r.nonfoodBurden],
+    ['②食料品ゼロ税率', +r.foodBenefit],
+    ['③給付付き税額控除', +r.kyufu],
+    ['④ベーシックサービス無償化', +r.bs],
+  ];
+  if(useKenpo) items.push(['⑤社会保険料の軽減（参考）', +r.kenpo]);
+  const max=Math.max(...items.map(x=>Math.abs(x[1])),1);
+  document.getElementById('bars').innerHTML=items.map(([nm,v])=>{
+    const w=Math.abs(v)/max*100;
+    return `<div class="bar"><div class="nm">${nm}</div><div class="track">
+      <div class="fill ${v>=0?'pos':'neg'}" style="${v>=0?'left:50%':'right:50%'};width:${w/2}%"></div>
+      <div style="position:absolute;left:50%;top:0;bottom:0;border-left:1px dashed #c5cbbd"></div>
+      </div><div class="val" style="color:${v>=0?'var(--plus)':'var(--minus)'}">${v>=0?'＋':'−'}${Math.abs(v).toFixed(1)}</div></div>`;
+  }).join('');
+
+  // 分布の位置づけ
+  const dist = net>=7 ? ['受け取る側（恩恵が大きい層）','#1f7a4d']
+            : net>=0 ? ['受け取る側（ややプラス）','#2C5F2D']
+            : net>=-6 ? ['支える側（負担が残る層）','#9A7400']
+            : ['支える側（負担が大きい層）','#b23a3a'];
+  document.getElementById('distnote').innerHTML=
+    `あなたの世帯は <b style="color:${dist[1]}">${dist[0]}</b> です。`
+    +`標準${Math.round(RATE*100)}%の人口ウェイト試算では、約6割が純プラス・約4割が純マイナス（中央値 +1.8万）。`
+    +`負担は「高所得ほど」ではなく、<b>子・大学生・介護などの受益がない世帯（子なし現役・共働き子なし）</b>に集中します。`;
+
+  // detail
+  document.getElementById('detail').innerHTML=
+    `<table><tr><th>項目</th><th>万円/年</th></tr>
+     <tr><td>①増税（非食料＋外食・酒類）</td><td>−${r.nonfoodBurden.toFixed(1)}</td></tr>
+     <tr><td>②食料品ゼロ税率の恩恵</td><td>＋${r.foodBenefit.toFixed(1)}</td></tr>
+     <tr><td>＝消費税ネット</td><td>${(-r.ctNet>=0?'＋':'−')+Math.abs(r.ctNet).toFixed(1)}</td></tr>
+     <tr><td>③給付付き税額控除</td><td>＋${r.kyufu.toFixed(1)}</td></tr>
+     <tr><td>④ベーシックサービス無償化</td><td>＋${r.bs.toFixed(1)}</td></tr>
+     <tr><td><b>差し引き（本体）</b></td><td><b>${(r.net>=0?'＋':'−')+Math.abs(r.net).toFixed(1)}</b></td></tr>
+     ${useKenpo?`<tr><td>⑤社会保険料の軽減（参考）</td><td>＋${r.kenpo.toFixed(1)}</td></tr><tr><td><b>差し引き（保険料込）</b></td><td><b>${(r.netWithKenpo>=0?'＋':'−')+Math.abs(r.netWithKenpo).toFixed(1)}</b></td></tr>`:''}
+     </table>
+     <p class="disc">前提：年収→可処分→消費を係数で展開し、税抜換算してから税率差（10→${Math.round(RATE*100)}%、食料8→0%）を掛けています。外食・酒類は軽減対象外として①に算入。表示は小数第1位（内部は第2位）で、合計が±0.1ずれて見える場合があります。</p>`;
+}
+
+/* 起動 */
+buildAdults();buildKids();onInput();
+/* 自己検証（コンソール）：プリセットが期待値と一致するか */
+(function(){
+  const exp17=[1.7,-5.6,28.7,11.8,17.0,4.7,14.7,-11.5,5.8,20.8];
+  let ok=true,log=[];
+  PRESETS.forEach((p,i)=>{const g=+calcPreset(p,0.17).net.toFixed(1);if(Math.abs(g-exp17[i])>0.05){ok=false;log.push(p.name+' 期待'+exp17[i]+' 実'+g);}});
+  console.log('プリセット自己検証(17%):', ok?'PASS（10/10一致）':'FAIL '+log.join(' / '));
+})();
+</script>
+</body>
+</html>
