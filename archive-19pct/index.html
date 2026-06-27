@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name=\"robots\" content=\"noindex, follow\">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="2 つの政府で、家計はどう変わる？── 消費税 19% 段階引き上げと給付付き税額控除・ベーシックサービス受益を、家計調査ベースで世帯別に試算。職業分離・動学減衰も反映。">
+<title>2つの政府で、家計はどう変わる？｜ 消費税 19% × 給付付き税額控除 × BS無償化 シミュレータ</title>
+
+<!-- OGP -->
+<meta property="og:url" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/archive-19pct/">
+<meta property="og:title" content="2つの政府で、家計はどう変わる？｜ 消費税 19% × 給付付き税額控除 × BS無償化">
+<meta property="og:description" content="消費税 +9pt の世帯負担と、給付付き税額控除・ベーシックサービス受益を家計調査ベースで試算。低所得は純プラス、中所得は応分の負担。">
+<meta property="og:image" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/archive-19pct/ogp.png?v=2026051203">
+<meta property="og:image:secure_url" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/archive-19pct/ogp.png?v=2026051203">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="2つの政府で、家計はどう変わる？— 消費税19% × 給付付き税額控除 × ベーシックサービス無償化">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="2つの政府で、家計はどう変わる？">
+<meta name="twitter:description" content="消費税 +9pt の世帯負担と給付付き税額控除・BS無償化受益を家計調査ベースで試算。低所得は純プラス。">
+<meta name="twitter:image" content="https://yamazakimakoto.github.io/hitotsu-tax-sim/archive-19pct/ogp.png?v=2026051203">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💴</text></svg>">
+<style>
+:root {
+  --ink: #1F1A2E;
+  --paper: #FAF6EE;
+  --paper-card: #FFFFFF;
+  --emerald: #10B981;
+  --emerald-deep: #047857;
+  --emerald-soft: #D1FAE5;
+  --emerald-pale: #ECFDF5;
+  --crimson: #B91C1C;
+  --crimson-soft: #FEE2E2;
+  --crimson-hot: #DC2626;
+  --gold: #D97706;
+  --gold-soft: #FEF3C7;
+  --slate: #475569;
+  --gray: #6B7280;
+  --gray-soft: #F3F4F6;
+  --line: #E5E7EB;
+  --shadow: 0 4px 14px rgba(31, 26, 46, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.serif {
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+}
+
+/* === HEADER === */
+header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 36px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--emerald) 0%, var(--gold) 100%);
+}
+.h-inner { max-width: 880px; margin: 0 auto; position: relative; }
+.brand { font-size: 12px; opacity: 0.7; letter-spacing: 0.08em; }
+.brand strong { color: var(--gold); margin-right: 4px; }
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 10px;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+h1 .emerald { color: #6EE7B7; }
+.sub {
+  font-size: 15px;
+  opacity: 0.85;
+  margin-top: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* === MAIN === */
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.disclaimer-top {
+  background: var(--gold-soft);
+  border-left: 4px solid var(--gold);
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #78350F;
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--paper-card);
+  border-radius: 14px;
+  padding: 28px 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: var(--ink);
+}
+.section-title .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--emerald);
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* === INPUT === */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate);
+  margin-bottom: 8px;
+}
+.field .hint {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.range-wrap input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--gray-soft);
+  outline: none;
+}
+.range-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--emerald);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.range-val {
+  min-width: 90px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 15px;
+}
+.toggle {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.toggle button {
+  flex: 1;
+  min-width: 60px;
+  padding: 9px 6px;
+  background: var(--gray-soft);
+  border: 1.5px solid transparent;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--slate);
+  transition: all 0.15s;
+}
+.toggle button:hover { background: var(--emerald-soft); }
+.toggle button.active {
+  background: var(--emerald);
+  color: white;
+  border-color: var(--emerald-deep);
+}
+
+/* === RESULT === */
+.result-card {
+  background: linear-gradient(135deg, var(--emerald-pale) 0%, var(--paper-card) 100%);
+  border: 2px solid var(--emerald-soft);
+}
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 640px) {
+  .summary { grid-template-columns: 1fr; gap: 10px; }
+}
+.bs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+@media (max-width: 640px) {
+  .bs-row { grid-template-columns: 1fr; gap: 10px; }
+}
+.summary-cell.bs {
+  border-color: #A7F3D0;
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+}
+.summary-cell.bs .value { color: #065F46; }
+.summary-cell.bs-net {
+  border-color: #6366F1;
+  background: linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%);
+}
+.summary-cell.bs-net .value { color: #3730A3; }
+.summary-cell.bs-net .value.plus { color: #065F46; }
+.summary-cell.bs-net .value.minus { color: var(--crimson-hot); }
+.bs-badge {
+  display: inline-block;
+  background: #065F46;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+}
+.bar-row.bs .val { color: #065F46; }
+.bar-row.bs .bar-fill { background: #34D399; }
+.summary-cell {
+  background: white;
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  border: 2px solid var(--gold-soft);
+}
+.summary-cell.refund { border-color: var(--emerald-soft); background: var(--emerald-pale); }
+.summary-cell.net { border-color: var(--ink); background: white; }
+.summary-cell .label {
+  font-size: 12px;
+  color: var(--slate);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.summary-cell .value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.summary-cell.refund .value { color: var(--emerald-deep); }
+.summary-cell.net .value { color: var(--ink); }
+.summary-cell.net .value.plus { color: var(--emerald-deep); }
+.summary-cell.net .value.minus { color: var(--crimson-hot); }
+.summary-cell .unit {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray);
+}
+.summary-cell .annot {
+  display: block;
+  font-size: 10px;
+  color: var(--gray);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+.message {
+  background: white;
+  border-left: 4px solid var(--emerald);
+  padding: 14px 18px;
+  font-size: 14px;
+  border-radius: 6px;
+  line-height: 1.8;
+}
+.message strong { color: var(--emerald-deep); }
+
+/* === BREAKDOWN === */
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+}
+@media (max-width: 480px) {
+  .bar-row { grid-template-columns: 80px 1fr 90px; }
+}
+.bar-row .lbl {
+  font-weight: 600;
+  color: var(--slate);
+}
+.bar-row .val {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.bar-row.burden .val { color: var(--gold); }
+.bar-row.refund .val { color: var(--emerald-deep); }
+.bar-track {
+  height: 22px;
+  background: var(--gray-soft);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.bar-row.burden .bar-fill { background: var(--gold); }
+.bar-row.refund .bar-fill { background: var(--emerald); }
+
+.section-divider {
+  margin: 16px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--line);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate);
+  letter-spacing: 0.05em;
+}
+
+/* === CTX === */
+.ctx-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ctx-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.ctx-table tr:last-child td { border-bottom: none; }
+.ctx-table tr td:first-child { color: var(--slate); }
+.ctx-table tr td:last-child { text-align: right; font-weight: 700; }
+.compare {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--gold-soft);
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* === DETAILS (計算根拠) === */
+.kosei {
+  background: var(--gray-soft);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+.kosei summary {
+  padding: 16px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  list-style: none;
+  position: relative;
+  user-select: none;
+}
+.kosei summary::-webkit-details-marker { display: none; }
+.kosei summary::after {
+  content: "▼";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--gray);
+  transition: transform 0.2s;
+}
+.kosei[open] summary::after { transform: translateY(-50%) rotate(180deg); }
+.kosei-body {
+  padding: 0 18px 18px;
+  font-size: 13px;
+  color: var(--slate);
+  line-height: 1.8;
+}
+.kosei-body p { margin-bottom: 10px; }
+.kosei-body ul { margin: 8px 0 12px 20px; }
+.kosei-body li { margin-bottom: 4px; }
+.ksei-cell {
+  background: white;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.ksei-cell strong { color: var(--ink); }
+.ksei-cell .desc { color: var(--slate); margin-top: 4px; }
+.formula {
+  background: white;
+  border-left: 3px solid var(--emerald);
+  padding: 12px 14px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+/* === LOGIC TABLE === */
+.logic-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 12.5px;
+}
+.logic-table th, .logic-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.logic-table th {
+  background: var(--emerald-soft);
+  color: var(--emerald-deep);
+  font-weight: 700;
+}
+.logic-table td:first-child { text-align: left; font-weight: 600; color: var(--slate); }
+
+/* === SHARE === */
+.share {
+  text-align: center;
+  margin: 28px 0 8px;
+  font-size: 13px;
+  color: var(--gray);
+}
+.share a {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 8px 18px;
+  background: var(--ink);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.share a:hover { background: var(--emerald-deep); }
+
+/* === FOOTER === */
+footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+footer p { margin: 4px 0; opacity: 0.85; }
+footer a { color: var(--emerald); }
+.f-inner { max-width: 880px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:99999;background:#8a2f2f;color:#fff;padding:11px 14px;font-family:system-ui,'Hiragino Kaku Gothic ProN',sans-serif;font-size:13.5px;line-height:1.6;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.25)">⚠️ これは<b>旧版（消費税19%案）のアーカイブ</b>です。19%案は撤回し、現行は<b>標準16〜17%</b>に置き換わりました。数値は当時のもので現行政策ではありません（フィクション・思考実験）。&nbsp;<a href="https://yamazakimakoto.github.io/hitotsu-tax-sim/" style="color:#fff;font-weight:700;text-decoration:underline">▶ 最新シミュレーターを開く</a></div>
+
+<header>
+  <div class="h-inner">
+    <div class="brand"><strong>◆</strong> 山崎誠政策研究所 ｜ シンクタンク・シミュレーション「ひとつの党」</div>
+    <h1 class="serif">2 つの政府で、<span class="emerald">家計はどう変わる？</span></h1>
+    <div class="sub">
+      消費税を <strong>19%</strong> へ段階引き上げ。同時に <strong>給付付き税額控除</strong>と<strong>ベーシックサービス無償化</strong>で再分配。<br>
+      もう一つの日本の財政設計で、<strong>あなたの世帯の負担と恩恵はどう変わるか？</strong>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="disclaimer-top">
+  ⚠ <strong>これはシミュレーション・シンクタンク試算です。</strong>「ひとつの党」（山崎誠政策研究所が運営するシンクタンク・シミュレーション）の財政設計案 ── 消費税 19% への段階引き上げ ＋ 給付付き税額控除 ── が実施された場合の、世帯別の家計影響を試算します。実在の政府・政党の公式試算ではありません。
+</div>
+
+
+<!-- ========== INPUT ========== -->
+<section class="card">
+  <h2 class="section-title"><span class="num">1</span>あなたの世帯について</h2>
+  <div class="form-grid">
+
+    <div class="field">
+      <label for="income">世帯年収（額面）</label>
+      <div class="range-wrap">
+        <input type="range" id="income" min="100" max="1500" step="10" value="400">
+        <span class="range-val" id="income-val">400 万円</span>
+      </div>
+      <div class="hint">スライダーで設定（100〜1,500 万円）</div>
+    </div>
+
+    <div class="field">
+      <label>世帯人数</label>
+      <div class="toggle" id="people">
+        <button data-val="1">1 人</button>
+        <button data-val="2">2 人</button>
+        <button data-val="3" class="active">3 人</button>
+        <button data-val="4">4 人</button>
+        <button data-val="5">5 人以上</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>子どもの数（18 歳未満）</label>
+      <div class="toggle" id="children">
+        <button data-val="0">0 人</button>
+        <button data-val="1" class="active">1 人</button>
+        <button data-val="2">2 人</button>
+        <button data-val="3">3 人以上</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>世帯のかたち</label>
+      <div class="toggle" id="household">
+        <button data-val="general" class="active">一般世帯</button>
+        <button data-val="single_parent">ひとり親</button>
+        <button data-val="senior">高齢者夫婦</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>地域</label>
+      <div class="toggle" id="region">
+        <button data-val="capital" class="active">首都圏</button>
+        <button data-val="city">地方都市</button>
+        <button data-val="rural">山間部・離島</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>自家用車</label>
+      <div class="toggle" id="car">
+        <button data-val="yes" class="active">あり</button>
+        <button data-val="no">なし</button>
+      </div>
+    </div>
+
+    <div class="field" style="grid-column: 1 / -1;">
+      <label>職業特性</label>
+      <div class="toggle" id="occupation">
+        <button data-val="general" class="active">一般</button>
+        <button data-val="farmer">農業従事</button>
+        <button data-val="fisher">漁業従事</button>
+      </div>
+      <div class="hint">農業・漁業従事者は燃料・肥料・資材の追加負担が大きいため、別途試算します。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========== RESULT ========== -->
+<section class="card result-card">
+  <h2 class="section-title"><span class="num">2</span>負担と給付の差し引き</h2>
+
+  <div class="summary">
+    <div class="summary-cell">
+      <div class="label">年間の 追加負担</div>
+      <div class="value" id="r-burden">+0.0 <span class="unit">万円</span></div>
+      <span class="annot">消費税 19% × 物価高</span>
+    </div>
+    <div class="summary-cell refund">
+      <div class="label">給付付き 税額控除</div>
+      <div class="value" id="r-refund">+0.0 <span class="unit">万円</span></div>
+      <span class="annot">あなたの世帯への戻り</span>
+    </div>
+    <div class="summary-cell net">
+      <div class="label">純差し引き <span style="font-size:10px;color:var(--gray);">給付のみ</span></div>
+      <div class="value" id="r-net">+0.0 <span class="unit">万円</span></div>
+      <span class="annot" id="r-net-annot">給付 − 負担</span>
+    </div>
+  </div>
+
+  <div class="bs-row">
+    <div class="summary-cell bs">
+      <div class="label">ベーシックサービス受益 <span class="bs-badge">BS</span></div>
+      <div class="value" id="r-bs">+0.0 <span class="unit">万円</span></div>
+      <span class="annot" id="r-bs-annot">教育・医療・介護の無償化</span>
+    </div>
+    <div class="summary-cell bs-net">
+      <div class="label">実質純差し引き <span class="bs-badge">BS含む</span></div>
+      <div class="value" id="r-bs-net">+0.0 <span class="unit">万円</span></div>
+      <span class="annot" id="r-bs-net-annot">給付＋BS − 負担</span>
+    </div>
+  </div>
+
+  <div class="message" id="r-message">
+    入力に応じて、即座に試算します。
+  </div>
+</section>
+
+<!-- ========== BREAKDOWN ========== -->
+<section class="card">
+  <h2 class="section-title"><span class="num">3</span>内訳 ── 負担と給付は、どこから生まれているか</h2>
+
+  <div class="section-divider">負担（消費税 19% × 物価高）</div>
+  <div class="breakdown" id="breakdown-burden"></div>
+
+  <div class="section-divider" style="margin-top: 22px;">給付付き税額控除（戻り）</div>
+  <div class="breakdown" id="breakdown-refund"></div>
+
+  <div class="section-divider" style="margin-top: 22px;">ベーシックサービス受益（教育・医療・介護の無償化）<span class="bs-badge">BS</span></div>
+  <div class="breakdown" id="breakdown-bs"></div>
+  <p class="hint" style="margin-top: 8px; font-size: 11.5px; color: var(--gray); line-height: 1.7;">
+    ※ BS受益は「現行制度での自己負担額が無償化後にゼロになる分」の推計です。保育料・給食費・高校授業料・医療窓口負担・介護自己負担の軽減分を合算しています。
+  </p>
+
+  <p class="hint" style="margin-top: 12px; font-size: 12px; color: var(--gray);">
+    ※ 負担＝消費税 19% 段階引き上げ完了後の年間追加支出（物価高込み）／給付＝仮想内閣の応能設計に基づく年間戻り額／BS受益＝ベーシックサービス無償化による世帯別節約額（推計）。
+  </p>
+</section>
+
+<!-- ========== CONTEXT ========== -->
+<section class="card">
+  <h2 class="section-title"><span class="num">4</span>家計に占める比率</h2>
+  <table class="ctx-table">
+    <tr><td>世帯の月平均 可処分所得（推定）</td><td><span id="r-monthly-income">—</span></td></tr>
+    <tr><td>追加負担の 可処分所得 比率</td><td><span id="r-burden-pct">—</span></td></tr>
+    <tr><td>給付控除後の 実質負担 比率</td><td><span id="r-net-pct">—</span></td></tr>
+    <tr><td>ベーシックサービス受益（年額）</td><td><span id="r-bs-year">—</span></td></tr>
+    <tr><td>給付＋BS込みの 実質差し引き比率</td><td><span id="r-bs-net-pct">—</span></td></tr>
+  </table>
+  <div class="compare" id="compare-msg">
+    年収階層別の比較を、ここに表示します。
+  </div>
+</section>
+
+<!-- ========== ロジック解説 ========== -->
+<section class="card">
+  <h2 class="section-title"><span class="num">5</span>給付付き税額控除のロジック ── 数字はどう作られているか</h2>
+
+  <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px; line-height: 1.7;">
+    本シミュレータの数字は、空想ではなく <strong style="color:var(--emerald-deep);">公的統計・実績データと、仮想内閣の財政設計案</strong> から組み上げています。給付付き税額控除のロジックを、5 段階で公開します。
+  </p>
+
+  <details class="kosei">
+    <summary>① 基本理念 ── 「応能負担と応分の還元」</summary>
+    <div class="kosei-body">
+      <p>仮想内閣の給付付き税額控除は、<strong>消費税 10% → 19% への段階引き上げ</strong>（2028 年度の 13%、2030 年度の 16%、2032 年度の 19% の 3 段階）の <strong>逆進性</strong> を相殺するために設計されています。</p>
+
+      <p>キーワードは <strong>「応能負担と応分の還元」</strong>。</p>
+      <ul>
+        <li>担税能力のある世帯には <strong>負担を求める</strong></li>
+        <li>担税能力の低い世帯には <strong>取った以上に還す</strong></li>
+        <li>「負担と給付の再設計」── 増税だけでも減税だけでもない</li>
+      </ul>
+
+      <table class="logic-table">
+        <tr><th>所得層</th><th>設計目標</th><th>結果</th></tr>
+        <tr><td>低所得層<br>(200〜400 万円)</td><td>消費税負担 ＋ 物価高負担を<br><strong>完全に補填</strong></td><td><strong style="color:var(--emerald-deep);">純プラス</strong><br>(手取りが増える)</td></tr>
+        <tr><td>中所得層<br>(500〜700 万円)</td><td>消費税負担を<br><strong>部分的に補填</strong></td><td>概ね均衡<br>〜やや負担</td></tr>
+        <tr><td>高所得層<br>(800 万円超)</td><td>補填なし<br>(応能負担の原則)</td><td>純負担を残す</td></tr>
+      </table>
+    </div>
+  </details>
+
+  <details class="kosei">
+    <summary>② 給付額の計算式 ── 5 段階の加算</summary>
+    <div class="kosei-body">
+      <p>シミュレータの給付額は、以下の <strong>5 段階の加算式</strong>で算出されます：</p>
+
+      <div class="formula">給付額 = ① 基礎額（年収による段階制）
+      + ② 子ども加算（1 人あたり +3 万円）
+      + ③ ひとり親加算（+5 万円）
+      + ④ 高齢者夫婦加算（+2 万円）
+      + ⑤ 職業特性加算（農業 +4 万円 / 漁業 +5 万円）</div>
+
+      <p style="margin-top: 12px;">どの加算も、<strong>逆進性緩和とケアの厚みづけ</strong>を狙った設計です。</p>
+    </div>
+  </details>
+
+  <details class="kosei">
+    <summary>③ 基礎額 ── 年収による段階制（線形補間）</summary>
+    <div class="kosei-body">
+      <p>年収に応じて、給付の基礎額が段階的に変わります。</p>
+
+      <table class="logic-table">
+        <tr><th>年収（万円）</th><th>基礎額（万円）</th><th>意味</th></tr>
+        <tr><td>0 〜 200</td><td>30</td><td>満額補填</td></tr>
+        <tr><td>300</td><td>28</td><td>ほぼ満額</td></tr>
+        <tr><td>400</td><td>22</td><td>大半を補填</td></tr>
+        <tr><td>500</td><td>15</td><td>半額補填</td></tr>
+        <tr><td>600</td><td>8</td><td>部分補填</td></tr>
+        <tr><td>700</td><td>3</td><td>わずかに補填</td></tr>
+        <tr><td>800 〜</td><td>0</td><td>補填なし</td></tr>
+      </table>
+
+      <p style="margin-top: 12px;">年収階層の中間値は <strong>線形補間</strong>で滑らかに変化します。<br>例：年収 350 万円 → 22 + (28−22) × (350−400)/(300−400) = <strong>25 万円</strong></p>
+
+      <p style="font-size: 12px; color: var(--gray); margin-top: 8px;">根拠：消費税 19% 段階引き上げ完了後の年間消費税負担増を、低所得層では満額、中所得層では半額、高所得層ではゼロで補填する応能設計（仮想内閣 5/1 閣議決定に基づく）。</p>
+    </div>
+  </details>
+
+  <details class="kosei">
+    <summary>④ 加算項目 ── ケアと特性の厚み</summary>
+    <div class="kosei-body">
+      <div class="ksei-cell">
+        <strong>◆ 子ども加算（+3 万円 / 1 人）</strong>
+        <div class="desc">紙おむつ・粉ミルク・冷凍食品・学用品など、子育てに直結する消費財の値上げを補填。<br>根拠：内閣府「子育てコスト推計」・厚労省「物価動向報告」</div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ ひとり親加算（+5 万円）</strong>
+        <div class="desc">所得制限なし。ひとり親世帯は固定費比率が高く、価格弾力性が低いため厚めに補填。<br>根拠：厚労省「全国ひとり親世帯等調査」2021</div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ 高齢者夫婦加算（+2 万円）</strong>
+        <div class="desc">年金生活配慮。基礎額がゼロに近い層でも、最低限の戻りを確保。<br>根拠：総務省「家計調査」高齢者世帯</div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ 職業特性加算（農業 +4 万円 / 漁業 +5 万円）</strong>
+        <div class="desc">燃料費・資材費の高騰を構造的に被る職業層への補填。<br>根拠：農水省「物価動向調査」・水産庁「漁業経営調査」</div>
+      </div>
+    </div>
+  </details>
+
+  <details class="kosei">
+    <summary>⑤ 試算の検証 ── 4 つのモデル世帯</summary>
+    <div class="kosei-body">
+      <p>本シミュレータの試算は、<strong>仮想内閣の財政設計案</strong>の 4 つのモデル世帯と整合することを確認しています。<br>
+      BS受益は「教育・医療・介護の無償化による節約額」の推計を含みます。</p>
+
+      <div class="ksei-cell">
+        <strong>◆ 4 人世帯（自家用車・年収 500 万・地方都市・子 2 人）</strong>
+        <div class="desc">
+          追加負担 <strong style="color:var(--gold);">+27.0 万円</strong> ／ 給付控除 <strong style="color:var(--emerald-deep);">+21.0 万円</strong> → 純差し引き（給付のみ）<strong style="color:var(--crimson);">−6.0 万円</strong><br>
+          BS受益（教育24 + 医療12）<strong style="color:#065F46;">+36.0 万円</strong> → 実質差し引き <strong style="color:#3730A3;">+30.0 万円</strong>
+        </div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ 高齢者ご夫婦（年金生活・年収 250 万・地方都市）</strong>
+        <div class="desc">
+          追加負担 <strong style="color:var(--gold);">+15.0 万円</strong> ／ 給付控除 <strong style="color:var(--emerald-deep);">+28.5 万円</strong> → 純差し引き（給付のみ）<strong style="color:var(--emerald-deep);">+13.5 万円</strong><br>
+          BS受益（医療15 + 介護18）<strong style="color:#065F46;">+33.0 万円</strong> → 実質差し引き <strong style="color:#3730A3;">+46.5 万円</strong>
+        </div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ ひとり親世帯（児童 1 人・年収 220 万・地方都市・自家用車）</strong>
+        <div class="desc">
+          追加負担 <strong style="color:var(--gold);">+18.0 万円</strong> ／ 給付控除 <strong style="color:var(--emerald-deep);">+38.0 万円</strong>（基礎 30 + 子 3 + ひとり親 5）→ 純差し引き（給付のみ）<strong style="color:var(--emerald-deep);">+20.0 万円</strong><br>
+          BS受益（教育55 + 医療15）<strong style="color:#065F46;">+70.0 万円</strong> → 実質差し引き <strong style="color:#3730A3;">+90.0 万円</strong>
+        </div>
+      </div>
+
+      <div class="ksei-cell">
+        <strong>◆ 高所得世帯（DINKS・年収 1,200 万・首都圏）</strong>
+        <div class="desc">
+          追加負担 <strong style="color:var(--gold);">+30.0 万円</strong> ／ 給付控除 <strong style="color:var(--emerald-deep);">+0.0 万円</strong> → 純差し引き（給付のみ）<strong style="color:var(--crimson);">−30.0 万円</strong><br>
+          BS受益 <strong style="color:#065F46;">+0.0 万円</strong>（子なし・現役） → 実質差し引き <strong style="color:var(--crimson);">−30.0 万円</strong>（応能負担）
+        </div>
+      </div>
+
+      <p style="margin-top: 12px;">
+        <strong style="color: var(--emerald-deep);">「増税・給付・無償化を三位一体で設計する」── これが、もう一つの政府の答えです。</strong>
+      </p>
+    </div>
+  </details>
+
+  <details class="kosei">
+    <summary>⑥ ベーシックサービス（BS）受益の推計方法</summary>
+    <div class="kosei-body">
+      <p>「ベーシックサービス無償化」とは、<strong>教育・医療・介護の自己負担をゼロまたは大幅軽減</strong>する制度改革です。仮想内閣は消費税増収の 9.0 兆円を、このBS無償化の財源としています。</p>
+
+      <table class="logic-table">
+        <tr><th>項目</th><th>現行制度</th><th>BS化後</th><th>主な受益層</th></tr>
+        <tr><td>保育・幼児教育 (0〜5歳)</td><td>0〜2歳：低所得のみ無料<br>3〜5歳：全員無料</td><td>0〜5歳：全員無料</td><td>子育て全世帯</td></tr>
+        <tr><td>学校給食費</td><td>有料（年 6 万円程度）</td><td>小中学校・高校まで無料</td><td>小中高生のいる世帯</td></tr>
+        <tr><td>大学等授業料</td><td>住民税非課税世帯のみ無料</td><td>年収 500 万円以下まで実質無料</td><td>低〜中所得の子育て世帯</td></tr>
+        <tr><td>子どもの医療費</td><td>自治体ごとにバラバラ</td><td>18 歳まで全国一律無料</td><td>18歳以下の子のいる全世帯</td></tr>
+        <tr><td>高齢者の医療費</td><td>1〜3 割負担</td><td>所得連動で軽減</td><td>高齢世帯</td></tr>
+        <tr><td>介護保険 自己負担</td><td>1〜3 割（上限あり）</td><td>上限引き下げ・低所得免除</td><td>要介護のいる高齢世帯</td></tr>
+      </table>
+
+      <p style="margin-top: 12px; font-size: 12px; color: var(--gray);">
+        ※ BS受益額は「現行の自己負担額 → 無償化後はゼロになる分」の推計です。世帯によって実際の利用状況は異なります。参考値としてご利用ください。
+      </p>
+    </div>
+  </details>
+
+  <p style="font-size: 12px; color: var(--gray); margin-top: 14px; line-height: 1.7;">
+    ※ 実際の家計負担・給付額は、世帯ごとの個別事情により大きく変動します。本シミュレータの数字は、典型的なモデル世帯の参考値としてご利用ください。
+  </p>
+</section>
+
+<!-- ========== SHARE ========== -->
+<div class="share">
+  この結果をシェア：
+  <a href="javascript:void(0)" onclick="shareTwitter()">X(Twitter)で共有</a>
+</div>
+
+</main>
+
+<footer>
+  <div class="f-inner">
+    <p>
+      <strong>2 つの政府で、家計はどう変わる？</strong> ｜ 山崎誠政策研究所 シンクタンク・シミュレーション「ひとつの党」
+    </p>
+    <p>
+      ◆ 試算根拠：2026年5月1日 閣議決定「日本の安全保障と防衛装備調達のあり方」（消費税 19% 段階引き上げ＋給付付き税額控除）
+    </p>
+    <p style="margin-top: 12px; opacity: 0.7;">
+      本シミュレータはシンクタンク・シミュレーションの試算ツールです。
+      実在の政党・政治家・団体・国家の政策・意思決定を示すものではありません。
+      実際の家計負担額・給付額は、世帯ごとの個別事情により大きく異なります。
+      参考値としてご利用ください。
+    </p>
+    <p style="margin-top: 6px; opacity: 0.7;">
+      制作・運営：山崎誠政策研究所
+    </p>
+  </div>
+</footer>
+
+<script>
+// ========== STATE ==========
+const state = {
+  income: 400,
+  people: 3,
+  children: 1,
+  household: "general",
+  region: "capital",
+  car: "yes",
+  occupation: "general",
+};
+
+// ========== EVENT BIND ==========
+document.getElementById("income").addEventListener("input", (e) => {
+  state.income = parseInt(e.target.value, 10);
+  document.getElementById("income-val").textContent = state.income + " 万円";
+  recalc();
+});
+
+["people", "children", "household", "region", "car", "occupation"].forEach((id) => {
+  const wrap = document.getElementById(id);
+  wrap.addEventListener("click", (e) => {
+    if (e.target.tagName !== "BUTTON") return;
+    wrap.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+    e.target.classList.add("active");
+    const v = e.target.dataset.val;
+    state[id] = (id === "people" || id === "children") ? parseInt(v, 10) : v;
+    recalc();
+  });
+});
+
+// ========== 追加負担の計算（家計調査ベース）==========
+// 設計方針：
+// (1) 消費税 +9 ポイントの追加負担を、世帯の「課税対象消費支出」を基準に算出
+// (2) エネルギー高による物価上昇分（家賃・教育等の非課税項目を除く）を別建てで加算
+// (3) 子ども・職業特性は補助項目として小さく扱う
+// データ参考：総務省「家計調査」2024 年・年間支出階層別平均
+// ※ 家賃帰属計算・教育費・医療費・社会保険料・公租公課は課税対象から除外
+function calcBurden() {
+  // === 年収別の「年間課税対象消費支出」（万円・4 人世帯ベース）===
+  // 家計調査の消費支出から非課税分（住居・教育・医療・社会保険料・税金・送金）を控除した推計値
+  const taxableByIncome = [
+    [100, 130], [200, 150], [300, 175], [400, 205],
+    [500, 235], [600, 260], [700, 285], [800, 310],
+    [1000, 345], [1200, 380], [1500, 440], [2000, 540], [3000, 700]
+  ];
+  let taxable = taxableByIncome[0][1];
+  const inc = state.income;
+  if (inc >= taxableByIncome[taxableByIncome.length - 1][0]) {
+    taxable = taxableByIncome[taxableByIncome.length - 1][1];
+  } else {
+    for (let i = 0; i < taxableByIncome.length - 1; i++) {
+      const [x1, y1] = taxableByIncome[i];
+      const [x2, y2] = taxableByIncome[i + 1];
+      if (inc >= x1 && inc <= x2) {
+        taxable = y1 + (y2 - y1) * (inc - x1) / (x2 - x1);
+        break;
+      }
+    }
+  }
+
+  // 世帯人数による課税消費スケール（家計調査の世帯人員別係数を簡素化）
+  const peopleK = { 1: 0.55, 2: 0.78, 3: 0.91, 4: 1.00, 5: 1.08 }[state.people] || 1.0;
+
+  // 高齢者夫婦：貯蓄取り崩しで収入比の消費水準が高い（消費性向 ≈ 110%）
+  const seniorAdj = state.household === "senior" ? 1.15 : 1.0;
+  // ひとり親：教育・医療控除少なめ、課税対象比率が若干高い
+  const singleAdj = state.household === "single_parent" ? 1.05 : 1.0;
+
+  // 地域差：地方は車・燃料消費が多く課税対象比率がやや高い
+  const regionK = { capital: 0.95, city: 1.00, rural: 1.05 }[state.region];
+
+  const adjustedTaxable = taxable * peopleK * seniorAdj * singleAdj * regionK;
+
+  // === Phase 1：消費税 +9 ポイントの追加負担 ===
+  const taxIncrease = adjustedTaxable * 0.09;
+
+  // === Phase 2：戦争・エネルギー高による物価上昇分 ===
+  // ガソリン・電気ガスの追加負担（消費税増税分とは別の現実コスト）
+  // 注：食料・日用品の物価上昇は Phase 1 の課税対象消費に概ね含まれるため除外
+  const peopleK2 = { 1: 0.5, 2: 0.7, 3: 0.85, 4: 1.0, 5: 1.15 }[state.people] || 1.0;
+  const carK = state.car === "yes" ? 1.0 : 0.0;
+  const regionK_gas = { capital: 0.7, city: 1.0, rural: 1.4 }[state.region];
+  const seniorEnergyAdj = state.household === "senior" ? 1.1 : 1.0;
+  const gasolineExtra = 2.4 * peopleK2 * carK * regionK_gas;
+  const utilityExtra  = 2.0 * peopleK2 * seniorEnergyAdj;
+  const energyExtra = gasolineExtra + utilityExtra;
+
+  // === Phase 3：子どもの追加負担（課税対象部分のみ）===
+  // 注：子育て総費用ではなく、消費税課税対象となる被服・教材・娯楽等の追加部分を指す
+  const childExtra = state.children * 1.8;
+
+  // === Phase 4：職業的燃料負担（事業経費としての追加コスト）===
+  // 注：これは「家計給付」ではなく「事業負担」として分離分析する項目
+  // 一次産業のみハイライト表示（他業種も同等の課題は産業補助の別制度で対応）
+  let occupational = 0;
+  if (state.occupation === "farmer") occupational = 3.5;
+  if (state.occupation === "fisher") occupational = 4.5;
+
+  const total = taxIncrease + energyExtra + childExtra + occupational;
+
+  return {
+    taxIncrease: Math.round(taxIncrease * 10) / 10,
+    energy: Math.round(energyExtra * 10) / 10,
+    child: Math.round(childExtra * 10) / 10,
+    occupational: Math.round(occupational * 10) / 10,
+    taxableBase: Math.round(adjustedTaxable * 10) / 10,
+    total: Math.round(total * 10) / 10,
+  };
+}
+
+// ========== 給付付き税額控除の計算（仮想内閣案）==========
+function calcRefund() {
+  // 単位: 万円/年
+  // 年収による段階制（線形補間）
+  const points = [
+    [0, 30], [200, 30], [300, 28], [400, 22], [500, 15],
+    [600, 8], [700, 3], [800, 0], [1500, 0]
+  ];
+  let base = 0;
+  const inc = state.income;
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x1, y1] = points[i];
+    const [x2, y2] = points[i + 1];
+    if (inc >= x1 && inc <= x2) {
+      base = y1 + (y2 - y1) * (inc - x1) / (x2 - x1);
+      break;
+    }
+  }
+
+  // 加算項目
+  const childAdd = state.children * 3;
+  const singleAdd = state.household === "single_parent" ? 5 : 0;
+  const seniorAdd = state.household === "senior" ? 2 : 0;
+  let occAdd = 0;
+  if (state.occupation === "farmer") occAdd = 4;
+  if (state.occupation === "fisher") occAdd = 5;
+
+  const total = base + childAdd + singleAdd + seniorAdd + occAdd;
+  return {
+    base: Math.round(base * 10) / 10,
+    child: childAdd,
+    single: singleAdd,
+    senior: seniorAdd,
+    occupation: occAdd,
+    total: Math.round(total * 10) / 10,
+  };
+}
+
+// ========== ベーシックサービス受益の計算 ==========
+// 教育・医療・介護の無償化による世帯別節約額を推計
+// 「現行制度での自己負担額 → 無償化後は 0」となる分の合計
+function calcBS() {
+  let edu = 0;     // 教育無償化受益（万円）
+  let medical = 0; // 医療費自己負担軽減（万円）
+  let nursing = 0; // 介護費自己負担軽減（万円）
+
+  // === 教育無償化 ===
+  if (state.children > 0) {
+    // 保育・幼児教育拡充（0〜5 歳）＋給食費無償化＋教材費等
+    // 現行：3〜5 歳は幼保無償化済、0〜2 歳は低所得のみ。BS では全世帯無償化へ。
+    // 平均受益：12 万円/子（年齢ミックス・保育料差額＋給食費相当を推計）
+    edu += state.children * 12;
+
+    // 大学等高等教育の実質無償化（修学支援拡充）
+    // 現行：住民税非課税世帯のみ。BS では年収 500 万円以下を対象に拡大。
+    if (state.income <= 300) {
+      edu += state.children * 30; // 授業料実質ゼロ（低所得世帯）
+    } else if (state.income <= 500) {
+      edu += state.children * 12; // 授業料半額支援（中低所得世帯）
+    } else if (state.income <= 700) {
+      edu += state.children * 4;  // 教材費・通学費支援（中所得世帯）
+    }
+  }
+
+  // === 子どもの医療費無償化（国レベル統一）===
+  // 現行：都道府県・市区町村ごとにバラバラ。BS では 18 歳まで全国一律無償化。
+  if (state.children > 0) {
+    // 自己負担（窓口 3 割）が掛かっていた世帯の節約分を推計
+    // 子ども 1 人あたり平均 6 万円/年（かかりつけ外来＋歯科＋入院等）
+    medical += state.children * 6;
+  }
+
+  // === 低所得層の医療費軽減（高額療養費拡充・窓口負担上限引き下げ）===
+  if (state.income <= 300) {
+    medical += 8; // 高額療養費の自己負担上限引き下げ + 窓口負担軽減
+  } else if (state.income <= 500) {
+    medical += 4;
+  } else if (state.income <= 700) {
+    medical += 2;
+  }
+
+  // === 高齢者夫婦：医療費・介護費の大幅軽減 ===
+  if (state.household === "senior") {
+    // 医療費：後期高齢者の窓口負担（現行 1〜3 割）を低減
+    medical += 15;
+    // 介護費：介護保険自己負担（現行 1〜3 割）の上限引き下げ
+    nursing += 18;
+  }
+
+  // === ひとり親世帯の医療費加算 ===
+  if (state.household === "single_parent") {
+    // 親自身の医療費・歯科が後回しになりがちな層へ配慮
+    medical += 4;
+  }
+
+  // 0 以下にならないようにクランプ
+  edu = Math.max(0, edu);
+  medical = Math.max(0, medical);
+  nursing = Math.max(0, nursing);
+
+  const total = edu + medical + nursing;
+  return {
+    edu:     Math.round(edu     * 10) / 10,
+    medical: Math.round(medical * 10) / 10,
+    nursing: Math.round(nursing * 10) / 10,
+    total:   Math.round(total   * 10) / 10,
+  };
+}
+
+// ========== RENDER ==========
+function recalc() {
+  const burden = calcBurden();
+  const refund = calcRefund();
+  const bs     = calcBS();
+  const net    = Math.round((refund.total - burden.total) * 10) / 10;
+  const bsNet  = Math.round((refund.total + bs.total - burden.total) * 10) / 10;
+
+  // サマリー（負担は +、給付は +、純差し引きは符号付き）
+  document.getElementById("r-burden").innerHTML = `+${burden.total.toFixed(1)} <span class="unit">万円</span>`;
+  document.getElementById("r-refund").innerHTML = `+${refund.total.toFixed(1)} <span class="unit">万円</span>`;
+
+  const netCell = document.getElementById("r-net");
+  const netAnnot = document.getElementById("r-net-annot");
+  if (net >= 0) {
+    netCell.innerHTML = `+${net.toFixed(1)} <span class="unit">万円</span>`;
+    netCell.className = "value plus";
+    netAnnot.textContent = "プラス（手取りが増える）";
+  } else {
+    netCell.innerHTML = `−${Math.abs(net).toFixed(1)} <span class="unit">万円</span>`;
+    netCell.className = "value minus";
+    netAnnot.textContent = "純負担（給付のみでは負担残る）";
+  }
+
+  // BS受益・実質純差し引き
+  const bsCell = document.getElementById("r-bs");
+  bsCell.innerHTML = `+${bs.total.toFixed(1)} <span class="unit">万円</span>`;
+  const bsAnnot = document.getElementById("r-bs-annot");
+  const bsItems = [];
+  if (bs.edu > 0)     bsItems.push(`教育 ${bs.edu.toFixed(1)}万`);
+  if (bs.medical > 0) bsItems.push(`医療 ${bs.medical.toFixed(1)}万`);
+  if (bs.nursing > 0) bsItems.push(`介護 ${bs.nursing.toFixed(1)}万`);
+  bsAnnot.textContent = bsItems.length > 0 ? bsItems.join(" + ") : "教育・医療・介護の無償化";
+
+  const bsNetCell = document.getElementById("r-bs-net");
+  const bsNetAnnot = document.getElementById("r-bs-net-annot");
+  if (bsNet >= 0) {
+    bsNetCell.innerHTML = `+${bsNet.toFixed(1)} <span class="unit">万円</span>`;
+    bsNetCell.className = "value plus";
+    bsNetAnnot.textContent = "実質プラス（BS含む手取り増）";
+  } else {
+    bsNetCell.innerHTML = `−${Math.abs(bsNet).toFixed(1)} <span class="unit">万円</span>`;
+    bsNetCell.className = "value minus";
+    bsNetAnnot.textContent = "実質負担（BS含めても負担残る）";
+  }
+
+  // メッセージ（給付のみ判定と BS 込み判定を両方表示）
+  const msgEl = document.getElementById("r-message");
+  const bsLine = bs.total > 0
+    ? `ベーシックサービス（教育・医療・介護無償化）受益が <strong>+${bs.total.toFixed(1)} 万円</strong> あり、`
+    : "";
+  if (net >= 15) {
+    msgEl.innerHTML = `<strong>給付が、負担を大きく上回ります。</strong>消費税 +9pt の増税と物価高を考慮しても、給付付き税額控除で年間 <strong>+${net.toFixed(1)} 万円</strong> の純プラスです。${bsLine}BS含む実質差し引きは <strong>+${bsNet.toFixed(1)} 万円</strong>。逆進性補填と応能設計が強く機能する層です。`;
+  } else if (net >= 5) {
+    msgEl.innerHTML = `<strong>給付のほうが負担を上回ります。</strong>純プラス <strong>+${net.toFixed(1)} 万円</strong>（給付のみ）。${bsLine}BS含む実質差し引きは <strong>+${bsNet.toFixed(1)} 万円</strong> となります。`;
+  } else if (net >= -5) {
+    msgEl.innerHTML = `<strong>給付と負担がほぼ均衡します。</strong>給付付き税額控除だけでは ${net >= 0 ? `純プラス +${net.toFixed(1)} 万円` : `純負担 ${Math.abs(net).toFixed(1)} 万円`}。${bsLine}BS含む実質差し引きは <strong>${bsNet >= 0 ? "+" : "−"}${Math.abs(bsNet).toFixed(1)} 万円</strong>。`;
+  } else if (net >= -20) {
+    msgEl.innerHTML = `<strong>応分の純負担となります（給付のみの計算）。</strong>追加負担 ${burden.total.toFixed(1)} 万円に対し給付控除 ${refund.total.toFixed(1)} 万円が戻り、差し引き <strong>−${Math.abs(net).toFixed(1)} 万円</strong>。${bsLine}BS含む実質では <strong>${bsNet >= 0 ? "+" : "−"}${Math.abs(bsNet).toFixed(1)} 万円</strong>。中所得帯はこの制度設計の「応分の担い手」です。`;
+  } else {
+    msgEl.innerHTML = `<strong>応能負担として、純負担が残ります。</strong>差し引き <strong>−${Math.abs(net).toFixed(1)} 万円</strong>（給付のみ）。${bs.total > 0 ? `BS受益 +${bs.total.toFixed(1)} 万円を含めると <strong>${bsNet >= 0 ? "+" : "−"}${Math.abs(bsNet).toFixed(1)} 万円</strong>。` : ""}年収 ${state.income} 万円帯では応能負担の設計上、社会全体の格差是正・財政持続性への寄与となります。`;
+  }
+
+  // 負担内訳（消費税増税を主軸に構成）
+  const burdenItems = [
+    { lbl: "消費税 +9pt 分", val: burden.taxIncrease },
+    { lbl: "ガソリン・電気ガス高騰分", val: burden.energy },
+  ];
+  if (burden.child > 0) {
+    burdenItems.push({ lbl: "子ども追加消費(課税分)", val: burden.child });
+  }
+  if (burden.occupational > 0) {
+    burdenItems.push({ lbl: state.occupation === "farmer" ? "事業燃料負担(農業)" : "事業燃料負担(漁業)", val: burden.occupational });
+  }
+  const maxBurden = Math.max(...burdenItems.map(i => i.val), 0.1);
+  let bHtml = "";
+  burdenItems.forEach((it) => {
+    if (it.val <= 0) return;
+    const pct = it.val / maxBurden * 100;
+    bHtml += `<div class="bar-row burden">
+      <span class="lbl">${it.lbl}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span class="val">+${it.val.toFixed(1)} 万円</span>
+    </div>`;
+  });
+  document.getElementById("breakdown-burden").innerHTML = bHtml;
+
+  // 給付内訳
+  const refundItems = [
+    { lbl: "基礎額", val: refund.base, hint: "年収階層別" },
+  ];
+  if (refund.child > 0) refundItems.push({ lbl: "子ども加算", val: refund.child });
+  if (refund.single > 0) refundItems.push({ lbl: "ひとり親加算", val: refund.single });
+  if (refund.senior > 0) refundItems.push({ lbl: "高齢者夫婦加算", val: refund.senior });
+  if (refund.occupation > 0) refundItems.push({ lbl: state.occupation === "farmer" ? "農業加算" : "漁業加算", val: refund.occupation });
+
+  const maxRefund = Math.max(...refundItems.map(i => i.val), 0.1);
+  let rHtml = "";
+  refundItems.forEach((it) => {
+    if (it.val <= 0) return;
+    const pct = it.val / maxRefund * 100;
+    rHtml += `<div class="bar-row refund">
+      <span class="lbl">${it.lbl}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span class="val">+${it.val.toFixed(1)} 万円</span>
+    </div>`;
+  });
+  if (refund.total === 0) {
+    rHtml = `<div style="background: var(--gold-soft); border-left: 3px solid var(--gold); padding: 12px 14px; font-size: 13px; border-radius: 6px;">この年収帯では、給付付き税額控除は <strong>0 万円</strong> です。応能負担の原則に基づき、補填は行われません。</div>`;
+  }
+  document.getElementById("breakdown-refund").innerHTML = rHtml;
+
+  // BS内訳
+  const bsItems2 = [
+    { lbl: "教育無償化", val: bs.edu, hint: "保育・給食・高校・大学支援" },
+    { lbl: "医療費軽減", val: bs.medical, hint: "18歳まで医療費無償・高齢者窓口負担軽減" },
+    { lbl: "介護費軽減", val: bs.nursing, hint: "介護保険自己負担上限引き下げ" },
+  ];
+  const maxBS = Math.max(...bsItems2.map(i => i.val), 0.1);
+  let bsHtml = "";
+  bsItems2.forEach((it) => {
+    if (it.val <= 0) return;
+    const pct = it.val / maxBS * 100;
+    bsHtml += `<div class="bar-row bs">
+      <span class="lbl">${it.lbl}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span class="val">+${it.val.toFixed(1)} 万円</span>
+    </div>`;
+  });
+  if (bs.total === 0) {
+    bsHtml = `<div style="background:var(--gray-soft);border-left:3px solid var(--gray);padding:12px 14px;font-size:13px;border-radius:6px;">この世帯プロフィールでは、ベーシックサービス受益の推計値は <strong>0 万円</strong> です（子どもなし・現役高所得・介護対象なし）。</div>`;
+  }
+  document.getElementById("breakdown-bs").innerHTML = bsHtml;
+
+  // 参考指標
+  const monthlyIncome = state.income * 0.78 / 12;
+  const burdenPct   = burden.total / (state.income * 0.78) * 100;
+  const netPct      = (burden.total - refund.total) / (state.income * 0.78) * 100;
+  const bsNetPct    = (burden.total - refund.total - bs.total) / (state.income * 0.78) * 100;
+  document.getElementById("r-monthly-income").textContent = `約 ${monthlyIncome.toFixed(1)} 万円 / 月`;
+  document.getElementById("r-burden-pct").textContent = `${burdenPct.toFixed(2)} %`;
+  const netPctCell = document.getElementById("r-net-pct");
+  if (netPct >= 0) {
+    netPctCell.innerHTML = `<span style="color: var(--crimson);">−${netPct.toFixed(2)} %（純負担）</span>`;
+  } else {
+    netPctCell.innerHTML = `<span style="color: var(--emerald-deep);">+${Math.abs(netPct).toFixed(2)} %（純プラス）</span>`;
+  }
+  document.getElementById("r-bs-year").textContent = `約 ${bs.total.toFixed(1)} 万円`;
+  const bsNetPctCell = document.getElementById("r-bs-net-pct");
+  if (bsNetPct >= 0) {
+    bsNetPctCell.innerHTML = `<span style="color: var(--crimson);">−${bsNetPct.toFixed(2)} %（実質負担）</span>`;
+  } else {
+    bsNetPctCell.innerHTML = `<span style="color: #3730A3;">+${Math.abs(bsNetPct).toFixed(2)} %（実質プラス）</span>`;
+  }
+
+  // 比較メッセージ
+  document.getElementById("compare-msg").innerHTML = makeCompareMessage(burden, refund, net, state.income);
+}
+
+function makeCompareMessage(burden, refund, net, income) {
+  // 年収階層別の純差し引き（4 人世帯モデル参考値・家計調査ベース）
+  // 給付 − 負担(消費税増税 + エネルギー高 + 子)
+  // 設計：「低所得は純プラス」「中所得は概ね応分の純負担」「高所得は明確に純負担」
+  const avgByIncome = [
+    [200, 18.0],   // 給付 30 - 負担 12
+    [300, 9.0],    // 給付 28 - 負担 19
+    [400, -3.0],   // 給付 22 - 負担 25
+    [500, -12.0],  // 給付 15 - 負担 27
+    [600, -22.0],  // 給付  8 - 負担 30
+    [700, -29.0],  // 給付  3 - 負担 32
+    [800, -34.0],
+    [1000, -38.0],
+    [1500, -45.0],
+  ];
+  let avgNet = 0;
+  for (let i = 0; i < avgByIncome.length - 1; i++) {
+    const [x1, y1] = avgByIncome[i];
+    const [x2, y2] = avgByIncome[i + 1];
+    if (income >= x1 && income <= x2) {
+      avgNet = y1 + (y2 - y1) * (income - x1) / (x2 - x1);
+      break;
+    }
+  }
+  const avgStr = avgNet >= 0
+    ? `<strong style="color:var(--emerald-deep);">純プラス +${avgNet.toFixed(1)} 万円</strong>`
+    : `<strong style="color:var(--crimson);">純負担 +${Math.abs(avgNet).toFixed(1)} 万円</strong>`;
+  return `年収 ${income} 万円・4 人モデル世帯の典型は ${avgStr}（地域・職業特性等で変動）。<br>
+  応能負担の設計：低所得層ほど純プラス、高所得層ほど純負担になります。`;
+}
+
+// ========== SHARE ==========
+function shareTwitter() {
+  const burden = calcBurden();
+  const refund = calcRefund();
+  const bs2    = calcBS();
+  const net    = Math.round((refund.total - burden.total) * 10) / 10;
+  const bsNet2 = Math.round((refund.total + bs2.total - burden.total) * 10) / 10;
+  const netLabel    = net    >= 0 ? `純プラス +${net.toFixed(1)}万円` : `純負担 −${Math.abs(net).toFixed(1)}万円`;
+  const bsNetLabel  = bsNet2 >= 0 ? `実質プラス +${bsNet2.toFixed(1)}万円` : `実質負担 −${Math.abs(bsNet2).toFixed(1)}万円`;
+  const text = `2つの政府で、わが家はどう変わる？\n年収 ${state.income}万円・${state.people}人世帯：\n追加負担 +${burden.total.toFixed(1)}万円\n給付控除 +${refund.total.toFixed(1)}万円 → ${netLabel}\nBS受益 +${bs2.total.toFixed(1)}万円 → ${bsNetLabel}(BS含む)\n\n#ひとつの党 #家計シミュレータ #消費税19`;
+  window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(text), "_blank");
+}
+
+// 初期表示
+recalc();
+</script>
+
+</body>
+</html>
